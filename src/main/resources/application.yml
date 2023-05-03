@@ -1,0 +1,18 @@
+spring:
+  config:
+    actives: default
+  datasource:
+    platform: postgres
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/java-algalog
+    username: postgres
+    password: postgres
+
+  jpa:
+    database: POSTGRESQL
+    hibernate:
+      show-sql: true
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
