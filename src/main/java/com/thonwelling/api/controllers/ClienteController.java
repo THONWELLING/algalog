@@ -1,28 +1,68 @@
 package com.thonwelling.api.controllers;
 
 import com.thonwelling.api.domain.models.Cliente;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.thonwelling.api.repository.ClienteRepository;
+import com.thonwelling.api.services.ClienteService;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 
+@AllArgsConstructor
 @RestController
+@RequestMapping("/clientes")
 public class ClienteController {
-  @GetMapping("/clientes")
-  public List<Cliente> listar() {
-    var cliente1 = new Cliente();
-    cliente1.setId(1L);
-    cliente1.setNome("Thonwelling");
-    cliente1.setTelefone("11 12345-6789");
-    cliente1.setEmail("admin@thonwelling.com");
+  private ClienteRepository clienteRepository;
+  private ClienteService clienteService;
 
-    var cliente2 = new Cliente();
-    cliente2.setId(2L);
-    cliente2.setNome("Danithon");
-    cliente2.setTelefone("11 12345-6789");
-    cliente2.setEmail("admin@danithon.com");
+  @GetMapping
+  public List<Cliente> listar(){
+    return clienteService.buscarTodosOsClientes();
+    // return clienteRepository.findByNomeContaining("o");
+  }
 
-    return Arrays.asList(cliente1, cliente2);
+  @GetMapping("/{clienteId}")
+  public ResponseEntity<Cliente> buscar(@PathVariable Long clienteId){
+    return clienteService.buscarUmClientePorId(clienteId)
+        // .map(cliente -> ResponseEntity.ok(cliente))
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
+
+    // Optional<Cliente> cliente =  clienteRepository.findById(clienteId);
+
+    // if(cliente.isPresent()){
+    //     return ResponseEntity.ok(cliente.get());
+    // }
+    // return ResponseEntity.notFound().build();
+  }
+
+  @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
+  public Cliente adicionar(@Valid @RequestBody Cliente cliente){
+    return clienteService.salvar(cliente);
+  }
+
+  @PutMapping("/{clienteId}")
+  public ResponseEntity<Cliente> atualizar(@Valid @PathVariable Long clienteId, @RequestBody Cliente cliente){
+
+    if(!clienteRepository.existsById(clienteId)){
+      return ResponseEntity.notFound().build();
+    }
+    cliente.setId(clienteId);
+    cliente = clienteService.salvar(cliente);
+    return ResponseEntity.ok(cliente);
+  }
+
+  @DeleteMapping("/{clienteId}")
+  public ResponseEntity<Void> remover(@PathVariable Long clienteId){
+
+    if(!clienteRepository.existsById(clienteId)){
+      return ResponseEntity.notFound().build();
+    }
+    clienteService.excluir(clienteId);
+    return ResponseEntity.noContent().build();
   }
 }
