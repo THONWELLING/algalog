@@ -20,7 +20,7 @@ public class SolicitacaoEntregaService {
 
     entrega.setCliente(cliente);
     entrega.setStatus(StatusEntrega.PENDENTE);
-    entrega.setDataPedido(OffsetDateTime.now().toLocalDateTime());
+    entrega.setDataPedido(OffsetDateTime.now());
 
     return entregaRepository.save(entrega);
   }
