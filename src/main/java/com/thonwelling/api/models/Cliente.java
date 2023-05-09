@@ -1,4 +1,4 @@
-package com.thonwelling.api.domain.models;
+package com.thonwelling.api.models;
 
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;

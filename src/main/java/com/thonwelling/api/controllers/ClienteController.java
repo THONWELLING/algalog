@@ -1,6 +1,6 @@
 package com.thonwelling.api.controllers;
 
-import com.thonwelling.api.domain.models.Cliente;
+import com.thonwelling.api.models.Cliente;
 import com.thonwelling.api.repository.ClienteRepository;
 import com.thonwelling.api.services.ClienteService;
 import jakarta.validation.Valid;
@@ -27,16 +27,8 @@ public class ClienteController {
   @GetMapping("/{clienteId}")
   public ResponseEntity<Cliente> buscar(@PathVariable Long clienteId){
     return clienteService.buscarUmClientePorId(clienteId)
-        // .map(cliente -> ResponseEntity.ok(cliente))
         .map(ResponseEntity::ok)
         .orElse(ResponseEntity.notFound().build());
-
-    // Optional<Cliente> cliente =  clienteRepository.findById(clienteId);
-
-    // if(cliente.isPresent()){
-    //     return ResponseEntity.ok(cliente.get());
-    // }
-    // return ResponseEntity.notFound().build();
   }
 
   @PostMapping

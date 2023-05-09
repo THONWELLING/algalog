@@ -4,24 +4,24 @@ import com.thonwelling.api.models.Cliente;
 import com.thonwelling.api.models.Entrega;
 import com.thonwelling.api.models.StatusEntrega;
 import com.thonwelling.api.repository.EntregaRepository;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
-@AllArgsConstructor
-@Service
-public class SolicitaEntregaService {
-  EntregaRepository entregaRepository;
-  ClienteService clienteService;
+public class SolicitacaoEntregaService {
+
+  private ClienteService clienteService;
+  private EntregaRepository entregaRepository;
+
   @Transactional
-  public Entrega solicitar (Entrega entrega) {
+  public Entrega solicitar(Entrega entrega) {
+
     Cliente cliente = clienteService.buscarCliente(entrega.getCliente().getId());
 
     entrega.setCliente(cliente);
     entrega.setStatus(StatusEntrega.PENDENTE);
-    entrega.setDataPedido(LocalDateTime.now());
+    entrega.setDataPedido(OffsetDateTime.now().toLocalDateTime());
+
     return entregaRepository.save(entrega);
   }
 }

@@ -1,4 +1,4 @@
-package com.thonwelling.api.domain.models;
+package com.thonwelling.api.models;
 
 public enum StatusEntrega {
   PENDENTE, FINALIZADA, CANCELADA

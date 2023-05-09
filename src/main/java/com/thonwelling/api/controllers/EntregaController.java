@@ -1,25 +1,57 @@
 package com.thonwelling.api.controllers;
 
-import com.thonwelling.api.domain.models.Entrega;
-import com.thonwelling.api.services.SolicitaEntregaService;
+import com.thonwelling.api.dtos.EntregaDto;
+import com.thonwelling.api.mapper.EntregaMapper;
+import com.thonwelling.api.models.Entrega;
+import com.thonwelling.api.models.input.EntregaInput;
+import com.thonwelling.api.repository.EntregaRepository;
+import com.thonwelling.api.services.FinalizacaoEntregaService;
+import com.thonwelling.api.services.SolicitacaoEntregaService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @RestController
-@RequestMapping
+@RequestMapping("/entregas")
 public class EntregaController {
 
-  SolicitaEntregaService solicitaEntregaService;
+  EntregaRepository entregaRepository;
+  SolicitacaoEntregaService solicitacaoEntregaService;
+  FinalizacaoEntregaService finalizacaoEntregaService;
+  EntregaMapper entregaMapper;
 
-  @PostMapping
-  @ResponseStatus(HttpStatus.CREATED)
-  public Entrega solicitar (Entrega entrega) {
+    @PostMapping
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public EntregaDto solicitar (@Valid @RequestBody EntregaInput entregaInput){
+      Entrega entregaSolicitada = solicitacaoEntregaService.solicitar(entregaMapper.toEntity(entregaInput));
+      return entregaMapper.toDTO(entregaSolicitada);
+    }
 
-    return solicitaEntregaService.solicitar(entrega);
-  }
+    @GetMapping
+    public List<EntregaDto> listar () {
+      List<Entrega> listEntrega = entregaRepository.findAll();
+
+      return entregaMapper.toListDTO(listEntrega);
+    }
+
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<EntregaDto> obterPorId (@PathVariable Long id){
+      return entregaRepository.findById(id)
+          .map(entrega -> ResponseEntity.ok(entregaMapper.toDTO(entrega)))
+          .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping(path = "/{id}/finalizacao")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public void finalizar (@PathVariable Long id){
+      finalizacaoEntregaService.finalizar(id);
+    }
+
 }

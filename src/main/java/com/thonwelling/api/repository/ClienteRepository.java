@@ -1,6 +1,6 @@
 package com.thonwelling.api.repository;
 
-import com.thonwelling.api.domain.models.Cliente;
+import com.thonwelling.api.models.Cliente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

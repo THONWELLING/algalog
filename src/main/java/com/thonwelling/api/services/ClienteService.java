@@ -1,6 +1,6 @@
 package com.thonwelling.api.services;
 
-import com.thonwelling.api.domain.models.Cliente;
+import com.thonwelling.api.models.Cliente;
 import com.thonwelling.api.exception.NegocioException;
 import com.thonwelling.api.repository.ClienteRepository;
 import lombok.AllArgsConstructor;

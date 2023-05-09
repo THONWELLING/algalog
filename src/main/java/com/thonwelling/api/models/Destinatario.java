@@ -1,4 +1,4 @@
-package com.thonwelling.api.domain.models;
+package com.thonwelling.api.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
